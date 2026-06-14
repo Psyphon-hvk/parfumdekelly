@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — Parfum De Kelly</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --gold: #d8a15d;
+      --gold-light: #f3d1a1;
+      --gold-dim: rgba(216,161,93,0.18);
+      --dark: #050505;
+      --dark2: #0a0a0a;
+      --header-h: 72px;
+    }
+
+    body {
+      background: var(--dark);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER (identical to index) ── */
+    header {
+      width: 100%; height: var(--header-h);
+      padding: 0 8%;
+      display: flex; justify-content: space-between; align-items: center;
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      background: rgba(5,5,5,0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo { display: flex; align-items: center; isolation: isolate; }
+    .logo img {
+      height: 56px; width: auto; object-fit: contain;
+      mix-blend-mode: lighten;
+    }
+
+    nav { display: flex; align-items: center; gap: 28px; }
+    nav a {
+      text-decoration: none; color: #ddd;
+      position: relative; transition: color 0.3s;
+      font-size: 0.88rem; letter-spacing: 0.5px;
+    }
+    nav a:hover { color: var(--gold-light); }
+    nav a.active { color: var(--gold-light); }
+    nav a::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -5px; width: 0; height: 1px;
+      background: var(--gold); transition: width 0.4s;
+    }
+    nav a:hover::after, nav a.active::after { width: 100%; }
+
+    .language-switch { display: flex; gap: 8px; }
+    .language-switch button {
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold-light); padding: 5px 11px; cursor: pointer;
+      transition: 0.3s; font-size: 0.78rem; font-family: 'Poppins', sans-serif;
+    }
+    .language-switch button:hover,
+    .language-switch button.active { background: var(--gold); color: #000; }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; z-index: 1100;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2px;
+      background: var(--gold-light); border-radius: 2px; transition: 0.35s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes shimmer {
+      0%   { transform: translateX(-100%) skewX(-15deg); opacity: 0.4; }
+      100% { transform: translateX(300%)  skewX(-15deg); opacity: 0; }
+    }
+    @keyframes lineGrow {
+      from { width: 0; } to { width: 60px; }
+    }
+    @keyframes softPulse {
+      0%,100% { opacity: 0.4; } 50% { opacity: 0.75; }
+    }
+    @keyframes floatY {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; height: 100vh;
+      min-height: 560px;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1587017539504-67cfbddac569?q=80&w=1600&auto=format&fit=crop');
+      background-size: cover; background-position: center 20%;
+      filter: brightness(40%) saturate(1.1);
+      transform: scale(1.04);
+      transition: transform 8s ease;
+      z-index: 0;
+    }
+    .hero-bg.loaded { transform: scale(1); }
+
+    /* layered overlays */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 60%),
+        linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 55%);
+    }
+
+    /* decorative rotating ring */
+    .hero-ring {
+      position: absolute;
+      top: 50%; right: 8%;
+      transform: translateY(-50%);
+      width: 340px; height: 340px;
+      border: 1px solid rgba(216,161,93,0.15);
+      border-radius: 50%;
+      z-index: 2;
+      animation: rotateSlow 30s linear infinite;
+    }
+    .hero-ring::before {
+      content: '';
+      position: absolute; inset: 20px;
+      border: 1px solid rgba(216,161,93,0.08);
+      border-radius: 50%;
+    }
+    .hero-ring::after {
+      content: '';
+      position: absolute; inset: 40px;
+      border: 1px dashed rgba(216,161,93,0.12);
+      border-radius: 50%;
+    }
+
+    .hero-content {
+      position: relative; z-index: 3;
+      padding: 0 8% 100px;
+      max-width: 720px;
+      animation: fadeUp 1.2s ease both 0.3s;
+    }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow span {
+      font-size: 0.7rem; letter-spacing: 5px; color: var(--gold);
+      font-weight: 500;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; flex: 0 0 40px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .hero-eyebrow::after {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+
+    .hero-content h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 7vw, 6rem);
+      font-weight: 300; line-height: 1.05;
+      color: var(--gold-light);
+      position: relative; overflow: hidden;
+    }
+    .hero-content h1 em {
+      font-style: italic; font-weight: 400;
+      color: #fff;
+    }
+
+    .hero-content h1::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
+      animation: shimmer 4s ease-in-out infinite 1.5s;
+    }
+
+    .hero-content p {
+      margin-top: 24px;
+      font-size: 0.92rem; line-height: 1.9;
+      color: rgba(255,255,255,0.72);
+      max-width: 500px;
+    }
+
+    .hero-scroll {
+      display: flex; align-items: center; gap: 12px;
+      margin-top: 48px;
+      color: rgba(216,161,93,0.6);
+      font-size: 0.7rem; letter-spacing: 3px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .hero-scroll:hover { color: var(--gold); }
+    .hero-scroll-line {
+      width: 40px; height: 1px;
+      background: currentColor;
+    }
+
+    /* ── DIVIDER ── */
+    .gold-divider {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; padding: 70px 8%;
+    }
+    .gold-divider span {
+      font-size: 1rem; color: var(--gold); opacity: 0.5;
+    }
+    .gold-divider::before, .gold-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(216,161,93,0.3), transparent);
+    }
+
+    /* ── STORY SECTION ── */
+    .story {
+      padding: 0 8% 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .story-images {
+      position: relative;
+      height: 580px;
+    }
+
+    .story-img-main {
+      position: absolute;
+      top: 0; left: 0;
+      width: 75%; height: 82%;
+      object-fit: cover;
+      border-radius: 2px;
+      filter: brightness(0.88) saturate(1.1);
+    }
+
+    .story-img-accent {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 52%; height: 48%;
+      object-fit: cover;
+      border-radius: 2px;
+      border: 4px solid var(--dark);
+      filter: brightness(0.9);
+    }
+
+    /* gold frame accent */
+    .story-images::before {
+      content: '';
+      position: absolute;
+      top: -16px; left: -16px;
+      width: 120px; height: 120px;
+      border-top: 1px solid var(--gold);
+      border-left: 1px solid var(--gold);
+      z-index: 2;
+      opacity: 0.5;
+    }
+    .story-images::after {
+      content: '';
+      position: absolute;
+      bottom: 30px; right: -16px;
+      width: 80px; height: 80px;
+      border-bottom: 1px solid var(--gold);
+      border-right: 1px solid var(--gold);
+      z-index: 2;
+      opacity: 0.5;
+    }
+
+    /* floating badge */
+    .story-badge {
+      position: absolute;
+      top: 46%; left: 62%;
+      transform: translate(-50%, -50%);
+      width: 110px; height: 110px;
+      background: var(--dark);
+      border: 1px solid rgba(216,161,93,0.4);
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 3;
+      animation: floatY 5s ease-in-out infinite;
+    }
+    .story-badge strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; color: var(--gold-light);
+      line-height: 1; font-weight: 500;
+    }
+    .story-badge span {
+      font-size: 0.58rem; letter-spacing: 2px;
+      color: rgba(216,161,93,0.65);
+      margin-top: 2px;
+    }
+
+    .story-text .eyebrow {
+      font-size: 0.68rem; letter-spacing: 5px;
+      color: var(--gold); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .story-text .eyebrow::after {
+      content: ''; flex: 0 0 30px; height: 1px;
+      background: var(--gold); opacity: 0.5;
+    }
+
+    .story-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 400; line-height: 1.12;
+      color: var(--gold-light); margin-bottom: 28px;
+    }
+    .story-text h2 em { font-style: italic; color: #fff; }
+
+    .story-text p {
+      font-size: 0.9rem; line-height: 2;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 20px;
+    }
+
+    .story-text .signature {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-style: italic;
+      color: var(--gold); opacity: 0.7;
+      margin-top: 36px;
+    }
+
+    /* ── VALUES ── */
+    .values {
+      background: var(--dark2);
+      padding: 100px 8%;
+    }
+
+    .values-header {
+      text-align: center; margin-bottom: 70px;
+    }
+    .values-header .eyebrow {
+      font-size: 0.68rem; letter-spacing: 5px;
+      color: var(--gold); margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+    }
+    .values-header .eyebrow::before,
+    .values-header .eyebrow::after {
+      content: ''; flex: 0 0 30px; height: 1px;
+      background: var(--gold); opacity: 0.4;
+    }
+    .values-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 400; color: var(--gold-light);
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .value-card {
+      padding: 52px 38px;
+      border: 1px solid rgba(255,255,255,0.04);
+      position: relative; overflow: hidden;
+      transition: border-color 0.4s;
+      cursor: default;
+    }
+    .value-card:hover { border-color: rgba(216,161,93,0.2); }
+
+    .value-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(216,161,93,0.04) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .value-card:hover::before { opacity: 1; }
+
+    .value-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4.5rem; font-weight: 300;
+      color: rgba(216,161,93,0.08);
+      line-height: 1;
+      position: absolute; top: 24px; right: 28px;
+      transition: color 0.4s;
+    }
+    .value-card:hover .value-number { color: rgba(216,161,93,0.15); }
+
+    .value-icon {
+      width: 44px; height: 44px;
+      margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .value-icon svg {
+      width: 36px; height: 36px;
+      stroke: var(--gold); fill: none;
+      stroke-width: 1.2;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .value-card:hover .value-icon svg { opacity: 1; }
+
+    .value-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 500;
+      color: var(--gold-light); margin-bottom: 14px;
+    }
+    .value-card p {
+      font-size: 0.85rem; line-height: 1.9;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── PROCESS ── */
+    .process {
+      padding: 110px 8%;
+      position: relative;
+    }
+
+    /* vertical timeline line */
+    .process::before {
+      content: '';
+      position: absolute;
+      left: calc(8% + 28px);
+      top: 170px; bottom: 110px;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(216,161,93,0.3) 15%, rgba(216,161,93,0.3) 85%, transparent);
+    }
+
+    .process-header {
+      text-align: center; margin-bottom: 80px;
+    }
+    .process-header .eyebrow {
+      font-size: 0.68rem; letter-spacing: 5px;
+      color: var(--gold); margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+    }
+    .process-header .eyebrow::before,
+    .process-header .eyebrow::after {
+      content: ''; flex: 0 0 30px; height: 1px;
+      background: var(--gold); opacity: 0.4;
+    }
+    .process-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 400; color: var(--gold-light);
+    }
+
+    .process-steps {
+      display: flex; flex-direction: column; gap: 0;
+      max-width: 780px; margin: 0 auto;
+      position: relative;
+    }
+
+    .process-step {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 36px;
+      padding-bottom: 56px;
+      position: relative;
+    }
+    .process-step:last-child { padding-bottom: 0; }
+
+    .step-dot {
+      width: 56px; height: 56px;
+      border: 1px solid rgba(216,161,93,0.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      background: var(--dark);
+      position: relative; z-index: 1;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    .process-step:hover .step-dot {
+      border-color: var(--gold);
+      background: rgba(216,161,93,0.08);
+    }
+    .step-dot span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; color: var(--gold); font-weight: 500;
+    }
+
+    .step-content { padding-top: 12px; }
+    .step-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem; font-weight: 500;
+      color: var(--gold-light); margin-bottom: 10px;
+    }
+    .step-content p {
+      font-size: 0.88rem; line-height: 1.95;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ── TEAM / FOUNDER ── */
+    .founder {
+      background: var(--dark2);
+      padding: 110px 8%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 90px;
+      align-items: center;
+    }
+
+    .founder-text .eyebrow {
+      font-size: 0.68rem; letter-spacing: 5px;
+      color: var(--gold); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .founder-text .eyebrow::after {
+      content: ''; flex: 0 0 30px; height: 1px;
+      background: var(--gold); opacity: 0.5;
+    }
+
+    .founder-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 400; color: var(--gold-light);
+      margin-bottom: 8px; line-height: 1.1;
+    }
+    .founder-text .title {
+      font-size: 0.75rem; letter-spacing: 3px;
+      color: var(--gold); opacity: 0.6;
+      margin-bottom: 28px;
+    }
+    .founder-text p {
+      font-size: 0.9rem; line-height: 2;
+      color: rgba(255,255,255,0.62);
+      margin-bottom: 18px;
+    }
+    .founder-text blockquote {
+      border-left: 2px solid var(--gold);
+      padding-left: 22px;
+      margin: 32px 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-style: italic;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1.7;
+      opacity: 0.85;
+    }
+
+    .founder-image-wrap {
+      position: relative;
+    }
+    .founder-image-wrap img {
+      width: 100%; aspect-ratio: 3/4;
+      object-fit: cover; object-position: center 10%;
+      filter: brightness(0.85) saturate(1.05);
+      display: block;
+    }
+
+    /* decorative corner frames */
+    .founder-image-wrap::before {
+      content: '';
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 90px; height: 90px;
+      border-top: 1px solid rgba(216,161,93,0.4);
+      border-right: 1px solid rgba(216,161,93,0.4);
+      z-index: 2;
+    }
+    .founder-image-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -14px; left: -14px;
+      width: 90px; height: 90px;
+      border-bottom: 1px solid rgba(216,161,93,0.4);
+      border-left: 1px solid rgba(216,161,93,0.4);
+      z-index: 2;
+    }
+
+    /* gold strip at bottom of image */
+    .founder-image-strip {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 22px 24px;
+      background: linear-gradient(to top, rgba(0,0,0,0.88), transparent);
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .founder-image-strip span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem; letter-spacing: 3px;
+      color: rgba(216,161,93,0.55);
+    }
+
+    /* ── STATS ── */
+    .stats {
+      padding: 90px 8%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .stat {
+      padding: 52px 36px;
+      background: var(--dark);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .stat::after {
+      content: '';
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 0; height: 1px; background: var(--gold);
+      transition: width 0.5s ease;
+    }
+    .stat:hover::after { width: 60%; }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem; font-weight: 300;
+      color: var(--gold-light); line-height: 1;
+    }
+    .stat-number sup {
+      font-size: 1.4rem; vertical-align: super;
+    }
+    .stat-label {
+      font-size: 0.7rem; letter-spacing: 3px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 10px;
+    }
+
+    /* ── CTA ── */
+    .cta {
+      position: relative; padding: 130px 8%;
+      text-align: center; overflow: hidden;
+    }
+
+    .cta-bg {
+      position: absolute; inset: 0;
+      background-image: url('footer.png');
+      background-size: cover; background-position: center;
+      filter: brightness(22%) saturate(1.1);
+      z-index: 0;
+    }
+    .cta::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: radial-gradient(ellipse at center, rgba(216,161,93,0.08) 0%, transparent 70%);
+      animation: softPulse 5s ease-in-out infinite;
+    }
+
+    .cta-content {
+      position: relative; z-index: 2;
+    }
+    .cta-content .eyebrow {
+      font-size: 0.68rem; letter-spacing: 5px;
+      color: var(--gold); margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+    }
+    .cta-content .eyebrow::before,
+    .cta-content .eyebrow::after {
+      content: ''; flex: 0 0 30px; height: 1px;
+      background: var(--gold); opacity: 0.4;
+    }
+    .cta-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 5vw, 4.5rem);
+      font-weight: 300; color: var(--gold-light);
+      line-height: 1.1; margin-bottom: 20px;
+    }
+    .cta-content p {
+      font-size: 0.9rem; color: rgba(255,255,255,0.55);
+      max-width: 420px; margin: 0 auto 42px;
+      line-height: 1.9;
+    }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 15px 44px;
+      background: var(--gold);
+      color: #000;
+      text-decoration: none;
+      font-size: 0.82rem; letter-spacing: 2px;
+      font-family: 'Poppins', sans-serif;
+      transition: 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+      animation: shimmer 2.5s ease-in-out infinite 1s;
+    }
+    .btn-primary:hover { background: var(--gold-light); }
+
+    .btn-outline {
+      display: inline-block;
+      padding: 15px 44px;
+      border: 1px solid rgba(216,161,93,0.5);
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: 0.82rem; letter-spacing: 2px;
+      font-family: 'Poppins', sans-serif;
+      transition: 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--gold); background: rgba(216,161,93,0.07); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 44px 8% 32px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-socials {
+      display: flex; justify-content: center; align-items: center;
+      gap: 18px; margin-bottom: 24px;
+    }
+    .footer-socials a {
+      display: flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px;
+      border: 1px solid rgba(216,161,93,0.28);
+      border-radius: 50%; color: #999;
+      text-decoration: none;
+      transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+    }
+    .footer-socials a:hover {
+      border-color: var(--gold); color: var(--gold-light);
+      background: rgba(216,161,93,0.08);
+      transform: translateY(-3px);
+    }
+    .footer-socials a svg { width: 20px; height: 20px; fill: currentColor; }
+    .footer-copy { font-size: 0.82rem; color: #555; letter-spacing: 0.5px; }
+
+    /* ══════════════════
+       MOBILE ≤ 768px
+    ══════════════════ */
+    @media (max-width: 768px) {
+      :root { --header-h: 64px; }
+      header { padding: 0 5%; }
+      .logo img { height: 50px; }
+      .hamburger { display: flex; }
+
+      #mobileMenu {
+        position: fixed; top: var(--header-h); left: 0; width: 100%;
+        background: rgba(8,8,8,0.97);
+        backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        flex-direction: column; align-items: center;
+        padding: 36px 0 40px; gap: 26px;
+        border-top: 1px solid rgba(255,255,255,0.07);
+        display: none; z-index: 999;
+      }
+      #mobileMenu.active { display: flex; }
+      #mobileMenu a { font-size: 1rem; letter-spacing: 1px; }
+
+      /* Hero */
+      .hero { height: 100svh; align-items: center; }
+      .hero-content { padding: calc(var(--header-h) + 40px) 6% 60px; }
+      .hero-ring { display: none; }
+
+      /* Story */
+      .story {
+        grid-template-columns: 1fr;
+        gap: 50px; padding: 0 5% 80px;
+      }
+      .story-images { height: 360px; }
+      .story-badge { width: 90px; height: 90px; }
+      .story-badge strong { font-size: 1.7rem; }
+
+      /* Values */
+      .values { padding: 80px 5%; }
+      .values-grid { grid-template-columns: 1fr; gap: 1px; }
+      .value-card { padding: 40px 28px; }
+
+      /* Process */
+      .process { padding: 80px 5%; }
+      .process::before { left: calc(5% + 28px); }
+      .process-steps { max-width: 100%; }
+
+      /* Founder */
+      .founder {
+        grid-template-columns: 1fr;
+        gap: 50px; padding: 80px 5%;
+      }
+      .founder-image-wrap { order: -1; }
+      .founder-image-wrap img { aspect-ratio: 4/3; }
+
+      /* Stats */
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat { padding: 40px 20px; }
+      .stat-number { font-size: 2.8rem; }
+
+      /* CTA */
+      .cta { padding: 90px 5%; }
+      .cta-btns { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-outline { width: 100%; text-align: center; }
+    }
+
+    @media (max-width: 380px) {
+      .logo img { height: 42px; }
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Parfum De Kelly">
+    </div>
+
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+
+    <nav id="mobileMenu">
+      <a href="index.html" onclick="closeMenu()">Home</a>
+      <a href="about.html" onclick="closeMenu()">About</a>
+      <a href="collection.html" onclick="closeMenu()">Collection</a>
+      
+      <a href="contact.html" onclick="closeMenu()">Contact</a>
+      <div class="language-switch">
+        <button class="active">EN</button>
+        <button>FR</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-ring"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span>OUR STORY</span>
+      </div>
+      <h1>Where <em>passion</em><br>becomes perfume</h1>
+      <p>Born from a love of rare ingredients and the art of French perfumery, Parfum De Kelly is a celebration of femininity, elegance, and the stories we carry in our skin.</p>
+      <div class="hero-scroll" onclick="document.querySelector('.story').scrollIntoView({behavior:'smooth'})">
+        <div class="hero-scroll-line"></div>
+        <span>DISCOVER MORE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STORY ── -->
+  <div class="gold-divider reveal"><span>✦</span></div>
+
+  <section class="story">
+    <div class="story-images reveal">
+      <img class="story-img-main"
+        src="https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=900&auto=format&fit=crop"
+        alt="Perfume crafting">
+      <img class="story-img-accent"
+        src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=600&auto=format&fit=crop"
+        alt="Perfume bottle">
+      <div class="story-badge">
+        <strong>3</strong>
+        <span>YEARS OF<br>CRAFT</span>
+      </div>
+    </div>
+
+    <div class="story-text reveal">
+      <div class="eyebrow">THE BEGINNING</div>
+      <h2>A dream distilled<br>into <em>every drop</em></h2>
+      <p>Parfum De Kelly was born in 2023 from a single obsession — to create fragrances that feel like memories. Kelly, our founder, spent years studying the ancient craft of perfumery across Paris, Grasse, and Marrakech before returning to Nairobi with a vision unlike anything the continent had seen.</p>
+      <p>Each fragrance in our collection is a chapter of her journey — a blend of African warmth, French precision, and Middle Eastern opulence. We source only the rarest raw materials: Bulgarian rose absolutes, Cambodian oud, Madagascan vanilla, and hand-harvested Kenyan neroli.</p>
+      <div class="signature">Kelly</div>
+    </div>
+  </section>
+
+  <!-- ── VALUES ── -->
+  <section class="values">
+    <div class="values-header reveal">
+      <div class="eyebrow">WHAT WE STAND FOR</div>
+      <h2>Our Philosophy</h2>
+    </div>
+    <div class="values-grid">
+
+      <div class="value-card reveal">
+        <div class="value-number">01</div>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        </div>
+        <h3>Authentic Craft</h3>
+        <p>Every bottle is hand-blended in small batches, never mass-produced. We believe perfumery is a living art — patient, intuitive, and deeply personal.</p>
+      </div>
+
+      <div class="value-card reveal">
+        <div class="value-number">02</div>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <h3>Rare Ingredients</h3>
+        <p>We travel the world to source the finest raw materials — from the oud forests of Southeast Asia to the rose fields of Grasse — sparing no effort for excellence.</p>
+      </div>
+
+      <div class="value-card reveal">
+        <div class="value-number">03</div>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+        </div>
+        <h3>Timeless Design</h3>
+        <p>Beauty extends beyond the scent. Our bottles are designed as objects of desire — minimal, architectural, worthy of the vanity they will grace for years.</p>
+      </div>
+
+      <div class="value-card reveal">
+        <div class="value-number">04</div>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>African Identity</h3>
+        <p>We are proudly rooted in Africa. Our scents carry the warmth of the savanna, the richness of the soil, and the vibrancy of a continent in full bloom.</p>
+      </div>
+
+      <div class="value-card reveal">
+        <div class="value-number">05</div>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77c-.28 0-.5.22-.5.5 0 .12.05.23.13.33.41.47.64 1.06.64 1.67A2.5 2.5 0 0 1 12 22zm0-18c-4.41 0-8 3.59-8 8s3.59 8 8 8c.28 0 .5-.22.5-.5a.54.54 0 0 0-.14-.35c-.41-.46-.63-1.05-.63-1.65a2.5 2.5 0 0 1 2.5-2.5H16c2.21 0 4-1.79 4-4 0-3.86-3.59-7-8-7z"/></svg>
+        </div>
+        <h3>Conscious Luxury</h3>
+        <p>Luxury should never come at the cost of our planet. We are committed to sustainable sourcing, cruelty-free formulations, and eco-conscious packaging.</p>
+      </div>
+
+      <div class="value-card reveal">
+        <div class="value-number">06</div>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </div>
+        <h3>Community First</h3>
+        <p>A portion of every purchase supports local artisan communities across East Africa, empowering the hands and hearts behind each unique creation.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── PROCESS ── -->
+  <section class="process">
+    <div class="process-header reveal">
+      <div class="eyebrow">HOW WE CREATE</div>
+      <h2>The Art of Making</h2>
+    </div>
+
+    <div class="process-steps">
+
+      <div class="process-step reveal">
+        <div class="step-dot"><span>I</span></div>
+        <div class="step-content">
+          <h3>Sourcing the Finest</h3>
+          <p>Our journey begins at the source. We travel to the world's most prestigious growing regions — rose fields in Grasse, oud forests in Laos, neroli groves in Kenya — selecting only the top 5% of each harvest by hand.</p>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-dot"><span>II</span></div>
+        <div class="step-content">
+          <h3>The Alchemy of Blending</h3>
+          <p>Kelly personally composes every fragrance accord. Using traditional maceration and cold enfleurage alongside modern techniques, each formula undergoes months of refinement — sometimes over 200 iterations — before it is deemed worthy.</p>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-dot"><span>III</span></div>
+        <div class="step-content">
+          <h3>Maceration & Maturation</h3>
+          <p>Like a fine wine, our fragrances are aged. The blended concentrate macerates in alcohol for a minimum of six weeks, allowing the notes to marry and the full character of the scent to emerge with depth and balance.</p>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-dot"><span>IV</span></div>
+        <div class="step-content">
+          <h3>Handcrafted Bottling</h3>
+          <p>Each bottle is hand-filled, sealed, and inspected individually. The labels are letterpress-printed on 400gsm cotton stock. No two bottles are identical — each carries a subtle uniqueness that reflects the human hands that made it.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FOUNDER ── -->
+  <section class="founder">
+    <div class="founder-text reveal">
+      <div class="eyebrow">THE VISIONARY</div>
+      <h2>Meet Kelly</h2>
+      <div class="title">FOUNDER & MASTER PERFUMER</div>
+      <p>Kelly grew up surrounded by the botanical richness of the Kenyan highlands — jasmine climbing garden walls, eucalyptus on the morning air, the deep earth after rain. These sensory memories became the language she would spend her life translating into fragrance.</p>
+      <blockquote>"A perfume is a conversation between who you are and who you wish to become."</blockquote>
+      <p>After training under master perfumers in Grasse and building a decade of expertise, she returned home with one mission: to create luxury fragrances rooted in African identity, crafted for the world.</p>
+    </div>
+
+    <div class="founder-image-wrap reveal">
+      <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=800&auto=format&fit=crop&crop=face" alt="Kelly, Founder">
+      <div class="founder-image-strip">
+        <span>NAIROBI, KENYA</span>
+        <span>EST. 2023</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section class="stats">
+    <div class="stat reveal">
+      <div class="stat-number">3<sup>+</sup></div>
+      <div class="stat-label">YEARS OF CRAFT</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-number">48</div>
+      <div class="stat-label">UNIQUE FRAGRANCES</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-number">5<sup>+</sup></div>
+      <div class="stat-label">COUNTRIES SHIPPED</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-number">100<sup>%</sup></div>
+      <div class="stat-label">CRUELTY FREE</div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta">
+    <div class="cta-bg"></div>
+    <div class="cta-content reveal">
+      <div class="eyebrow">BEGIN YOUR JOURNEY</div>
+      <h2>Find your signature<br><em>scent</em></h2>
+      <p>Every fragrance tells a story. Discover the one that speaks to yours.</p>
+      <div class="cta-btns">
+        <a href="collection.html" class="btn-primary">EXPLORE COLLECTION</a>
+        <a href="contact.html" class="btn-outline">CONTACT US</a>
+      </div>
+    </div>
+  </section>
+
+   <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-socials">
+
+      <a href="https://wa.me/254 111 851863" target="_blank" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </a>
+
+      <a href="https://www.instagram.com/parfum_de_kelly?igsh=MTU2OHV1MHJoZTZ1Zg==" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+        </svg>
+      </a>
+
+      <a href="tel:+254 111 851863" aria-label="Call us">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+      </a>
+
+    </div>
+
+    <p class="footer-copy">&copy; 2026 Parfum De Kelly. All Rights Reserved.</p>
+
+  </footer>
+
+  <script>
+    // Nav toggle
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('active');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('mobileMenu').classList.remove('active');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobileMenu');
+      const burger = document.getElementById('hamburger');
+      if (!menu.contains(e.target) && !burger.contains(e.target)) {
+        menu.classList.remove('active');
+        burger.classList.remove('open');
+      }
+    });
+
+    // Hero bg zoom-in on load
+    window.addEventListener('load', () => {
+      document.getElementById('heroBg').classList.add('loaded');
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // stagger siblings
+          const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+          const idx = siblings.indexOf(entry.target);
+          entry.target.style.transitionDelay = (idx * 0.1) + 's';
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Animated stat counters
+    function animateCounter(el, target, suffix) {
+      let start = 0;
+      const duration = 1800;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target.querySelector('.stat-number');
+          const raw = el.textContent;
+          const num = parseInt(raw);
+          const hasSup = el.querySelector('sup');
+          const suffix = hasSup ? hasSup.textContent : '';
+          el.innerHTML = '0' + (hasSup ? `<sup>${suffix}</sup>` : '');
+          animateCounter(
+            hasSup ? el.firstChild : el,
+            num, ''
+          );
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat').forEach(el => statObserver.observe(el));
+  </script>
+
+</body>
+</html>
